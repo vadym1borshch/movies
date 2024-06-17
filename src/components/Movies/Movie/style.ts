@@ -44,7 +44,15 @@ export const MovieStyles: SxProps<Theme> = {
       backgroundColor: "#fff",
       position: "absolute",
       bottom: 0,
-      left: "10px"
     }
   }
+}
+
+export const leftContainerCloseStyle: SxProps<Theme> = {
+  minHeight: '0 !important',
+  maxHeight: '40px',
+}
+
+export const movieContainerCloseStyle: SxProps<Theme> = {
+  alignItems: 'start !important',
 }

@@ -1,25 +1,34 @@
 import { FC } from 'react'
 import { Box } from '@mui/material'
-import { MovieType } from '../../../store/MoviesSlice'
+import { MovieType, addWatchedMovie } from '../../../store/MoviesSlice'
 import { MovieStyles } from './style'
-import { useResize } from '../../../commonFiles/hooks'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../../store/store'
 
 interface IMovieProps {
   movies: MovieType[]
+  isClose: boolean
+  height: number
 }
 
-export const Movie: FC<IMovieProps> = ({ movies }) => {
-  const height = useResize(200)
+export const Movie: FC<IMovieProps> = ({ movies, isClose, height }) => {
+
+  const dispatch = useDispatch<AppDispatch>()
   return (
     <Box
       sx={{
         ...MovieStyles,
-        height: `${height}px`,
+        height: isClose ? '80px' : `${height}px`,
+        display: isClose ? 'none' : 'block',
       }}
     >
       {movies.map((movie) => {
         return (
-          <Box key={movie.imdbID} className="movie_container">
+          <Box
+            key={movie.imdbID}
+            className="movie_container"
+            onClick={() => dispatch(addWatchedMovie(movie))}
+          >
             <Box>
               <img src={movie.Poster} alt={movie.Title} />
             </Box>
