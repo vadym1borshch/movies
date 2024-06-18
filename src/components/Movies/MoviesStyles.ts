@@ -1,5 +1,22 @@
 import { SxProps, Theme } from '@mui/material'
 
+const scrollStyle: SxProps<Theme> = {
+  '&::-webkit-scrollbar': {
+    width: '3px',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: '#555',
+    borderRadius: '5px',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: '#f1f1f1',
+    borderRadius: '5px',
+  },
+  '&::-webkit-scrollbar-thumb:hover': {
+    background: '#555',
+  },
+}
+
 const iconStyles: SxProps<Theme> = {
   '& .icon_container': {
     display: 'flex',
@@ -28,7 +45,7 @@ export const MoviesStyles: SxProps<Theme> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    margin: "10px 10px 0 10px",
+    margin: '10px 10px 0 10px',
     '& .text-field_container': {
       display: 'flex',
       justifyContent: 'center',
@@ -72,7 +89,7 @@ export const MoviesStyles: SxProps<Theme> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: "10px",
+    gap: '10px',
     '& .movies': {
       display: 'flex',
       width: '50%',
@@ -93,23 +110,56 @@ export const MoviesStyles: SxProps<Theme> = {
 
 export const infoContainer: SxProps<Theme> = {
   '& .watched-movies-summary_info': {
-    backgroundColor: '#919d94',
     borderRadius: '10px',
     margin: '0 0 10px 0',
-    padding: '5px',
-    height: '70px',
     ...iconStyles,
+    '& .watched-movies_container': {
+      overflow: 'auto',
+      marginTop: '10px',
+      padding: '0 5px',
+      ...scrollStyle,
+      '& .movie_container': {
+        display: 'flex',
+        alignItems: 'start',
+        gap: 1,
+        justifyContent: '',
+        borderBottom: "2px solid white",
+        '& .movie-image_container': {
+          '& img': {
+            width: '100px',
+            height: '150px',
+          },
+        },
+        '& .movie-descriptions_container': {
+          '& .movie-data_container': {
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 3,
+            '& span': {
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+            },
+          },
+        },
+      },
+    },
     '& .watched-movies_info-container': {
       display: 'flex',
       flexDirection: 'column',
-
-
+      backgroundColor: '#919d94',
+      borderRadius: "10px",
+      padding: '5px',
       '& h3': { margin: '0 0 5px 0' },
       '& .watched-movies_info': {
         display: 'flex',
         justifyContent: 'flex-start',
+        flexWrap: 'wrap',
+        gap: 3,
         '& span': {
-          marginRight: '10px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
         },
       },
     },

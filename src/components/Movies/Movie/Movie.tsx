@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { Box } from '@mui/material'
-import { MovieType, addWatchedMovie } from '../../../store/MoviesSlice'
+import { MovieType, addWatchedMovieAction } from '../../../store/MoviesSlice'
 import { MovieStyles } from './style'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../../store/store'
@@ -27,7 +27,7 @@ export const Movie: FC<IMovieProps> = ({ movies, isClose, height }) => {
           <Box
             key={movie.imdbID}
             className="movie_container"
-            onClick={() => dispatch(addWatchedMovie(movie))}
+            onClick={() => dispatch(addWatchedMovieAction(movie))}
           >
             <Box>
               <img src={movie.Poster} alt={movie.Title} />

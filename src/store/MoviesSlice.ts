@@ -8,21 +8,22 @@ export type MovieType = {
   Year: string
   imdbID: string
 }
-export type WatchedMovie = {
+export type WatchedMovieType = {
   Poster: string
   Title: string
   imdbID: string
   duration: number
-  rating: number
-  usersRating: number
+  overallRating: number
+  personalRating: number
 }
 
 type StateType = {
   movies: MovieType[]
-  watchedMovies: WatchedMovie[]
+  watchedMovies: WatchedMovieType[]
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: null | string | undefined
   initialMovie: string
+  isMovieAdded: string | null
 }
 
 const initialState: StateType = {
@@ -31,6 +32,7 @@ const initialState: StateType = {
   status: 'idle',
   error: null,
   initialMovie: 'interstellar',
+  isMovieAdded: null,
 }
 const KEY = 'af71ac68'
 
@@ -42,7 +44,6 @@ export const getMovies = createAsyncThunk<
   const url = `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
 
   const res = await axios.get(url)
-  console.log(res.data)
   return res.data.Search
 })
 
@@ -50,10 +51,13 @@ const movieSlice = createSlice({
   name: 'movies',
   initialState,
   reducers: {
-    addWatchedMovie: (state, action: PayloadAction<MovieType>) => {
+    addWatchedMovieAction: (state, action: PayloadAction<MovieType>) => {
       const hasMovie = state.watchedMovies.find(
         (movie) => movie.imdbID === action.payload.imdbID,
       )
+      if (hasMovie) {
+        state.isMovieAdded = action.payload.imdbID
+      }
       if (!hasMovie) {
         state.watchedMovies = [
           ...state.watchedMovies,
@@ -62,11 +66,14 @@ const movieSlice = createSlice({
             imdbID: action.payload.imdbID,
             Title: action.payload.Title,
             duration: Math.floor(Math.random() * 81) + 120,
-            rating: 0,
-            usersRating: Math.floor(Math.random() * 9),
+            overallRating: Math.floor(Math.random() * 9),
+            personalRating: 0,
           },
         ]
       }
+    },
+    clearIsMovieAddedAction: (state) => {
+      state.isMovieAdded = null
     },
   },
   extraReducers: (builder) => {
@@ -85,6 +92,7 @@ const movieSlice = createSlice({
   },
 })
 
-export const { addWatchedMovie } = movieSlice.actions
+export const { addWatchedMovieAction, clearIsMovieAddedAction } =
+  movieSlice.actions
 
 export default movieSlice.reducer

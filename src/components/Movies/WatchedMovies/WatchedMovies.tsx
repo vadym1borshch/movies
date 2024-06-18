@@ -1,32 +1,38 @@
 import { FC } from 'react'
-import { Box } from '@mui/material'
-import { useResize } from '../../../commonFiles/hooks'
-import { MovieStyles } from '../Movie/style'
-import { WatchedMovie } from '../../../store/MoviesSlice'
+import { Box, Icon } from '@mui/material'
+import { WatchedMovieType } from '../../../store/MoviesSlice'
+import StarRateIcon from '@mui/icons-material/StarRate'
+import TimelapseIcon from '@mui/icons-material/Timelapse'
+import StarsIcon from '@mui/icons-material/Stars'
 
 interface IWatchedMoviesProps {
   isClose?: boolean
-  movie: WatchedMovie
+  movie: WatchedMovieType
 }
 
-export const WatchedMovies: FC<IWatchedMoviesProps> = ({ isClose, movie }) => {
-  const height = useResize(200)
-
+export const WatchedMovie: FC<IWatchedMoviesProps> = ({ isClose, movie }) => {
   return (
-    <Box
-
-    >
-      <Box>
+    <Box className="movie_container">
+      <Box className="movie-image_container">
         <img src={movie.Poster} alt={movie.Title} />
       </Box>
-      <Box>
-        <Box>
+      <Box className="movie-descriptions_container">
+        <Box className="movie-title_container">
           <h3>{movie.Title}</h3>
         </Box>
-        <Box>
-          <span>{movie.rating}</span>
-          <span>{movie.usersRating}</span>
-          <span>{movie.duration}</span>
+        <Box className="movie-data_container">
+          <span>
+            {movie.overallRating}
+            <StarRateIcon />
+          </span>
+          <span>
+            {movie.personalRating}
+            <StarsIcon />
+          </span>
+          <span>
+            {movie.duration}
+            <TimelapseIcon />
+          </span>
         </Box>
       </Box>
     </Box>

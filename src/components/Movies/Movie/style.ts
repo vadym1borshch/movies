@@ -1,6 +1,6 @@
 import { SxProps, Theme } from "@mui/material";
 
-const scrollStyle: SxProps<Theme> = {
+ const scrollStyle: SxProps<Theme> = {
   "&::-webkit-scrollbar": {
     width: "3px"
   },

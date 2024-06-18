@@ -8,7 +8,7 @@ import RemoveIcon from '@mui/icons-material/Remove'
 import AddIcon from '@mui/icons-material/Add'
 import { Movie } from './Movie/Movie'
 import { WatchedMoviesSummary } from './WatchedMoviesSummary/WatchedMoviesSummary'
-import { WatchedMovies } from './WatchedMovies/WatchedMovies'
+import { WatchedMovie } from './WatchedMovies/WatchedMovies'
 import { useResize } from '../../commonFiles/hooks'
 
 interface IMovieProps {}
@@ -49,25 +49,29 @@ export const Movies: FC<IMovieProps> = () => {
               {!isClose ? <RemoveIcon /> : <AddIcon />}
             </Icon>
           </Box>
-          <Movie movies={movies} isClose={isClose} height={height}/>
+          <Movie movies={movies} isClose={isClose} height={height} />
         </Box>
         <Box className="movies right_container">
           <Box sx={{ ...infoContainer }}>
             <Box className="watched-movies-summary_info">
-              <Box className="icon_container">
-                <Icon onClick={() => setIsClose(!isClose)}>
-                  {!isClose ? <RemoveIcon /> : <AddIcon />}
-                </Icon>
+              <Box className="watched-movies_info-container">
+                <Box className="icon_container">
+                  <Icon onClick={() => setIsClose(!isClose)}>
+                    {!isClose ? <RemoveIcon /> : <AddIcon />}
+                  </Icon>
+                </Box>
+                <WatchedMoviesSummary />
               </Box>
-              <WatchedMoviesSummary />
-              <Box sx={{
-                overflow: 'auto',
-                height: `${height}px`,
-                marginTop: '10px'
-              }}>
+
+              <Box
+                className="watched-movies_container"
+                sx={{
+                  height: `${height}px`,
+                }}
+              >
                 {watchedMovies.map((movie) => {
                   return (
-                    <WatchedMovies
+                    <WatchedMovie
                       key={movie.imdbID}
                       isClose={isClose}
                       movie={movie}
