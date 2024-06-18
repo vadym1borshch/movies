@@ -3,23 +3,22 @@ import { Box, Icon } from '@mui/material'
 import { infoContainer, MoviesStyles } from './MoviesStyles'
 import { Search } from '../Search/Search'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../store/store'
 import RemoveIcon from '@mui/icons-material/Remove'
 import AddIcon from '@mui/icons-material/Add'
 import { Movie } from './Movie/Movie'
 import { WatchedMoviesSummary } from './WatchedMoviesSummary/WatchedMoviesSummary'
 import { WatchedMovie } from './WatchedMovies/WatchedMovies'
 import { useResize } from '../../commonFiles/hooks'
+import { moviesSelector, watchedMoviesSelector } from '../../store/selectors'
 
 interface IMovieProps {}
 
 export const Movies: FC<IMovieProps> = () => {
-  const movies = useSelector((state: RootState) => state.movieSlice.movies)
+  const movies = useSelector(moviesSelector)
+  const watchedMovies = useSelector(watchedMoviesSelector)
   const [isClose, setIsClose] = useState(false)
   const height = useResize(200)
-  const watchedMovies = useSelector(
-    (state: RootState) => state.movieSlice.watchedMovies,
-  )
+
   return (
     <Box
       sx={{

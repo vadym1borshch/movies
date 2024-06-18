@@ -15,11 +15,12 @@ interface iWatchedMoviesSummaryProps {}
 
 export const WatchedMoviesSummary: FC<iWatchedMoviesSummaryProps> = ({}) => {
   const watchedMovies = useSelector(watchedMoviesSelector)
-  const totalCount = watchedMovies.length
   const overallValues = useSelector(overallMovieValuesSelector)
+  const totalCount = watchedMovies.length
+
 
   return (
-    < >
+    <>
       <Box className="watched-movies_header">
         <h3>Movies you watched</h3>
       </Box>

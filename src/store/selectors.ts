@@ -1,8 +1,11 @@
 import { RootState } from './store'
-import { createSelector } from 'reselect';
+import { createSelector } from 'reselect'
 
 export const watchedMoviesSelector = (state: RootState) =>
   state.movieSlice.watchedMovies
+export const moviesSelector = (state: RootState) => state.movieSlice.movies
+export const isMovieAddedSelector = (state: RootState) => state.movieSlice.isMovieAdded
+export const initialMovieSelector = (state: RootState) => state.movieSlice.initialMovie
 
 const initialValues = {
   totalOverallRating: 0,
@@ -32,7 +35,5 @@ export const overallMovieValuesSelector = createSelector(
         totalValues.totalPersonalRating / totalCount
       ).toFixed(1),
     }
-  }
-);
-
-
+  },
+)

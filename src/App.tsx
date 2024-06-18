@@ -5,14 +5,15 @@ import { AppDispatch, RootState } from './store/store'
 import { clearIsMovieAddedAction, getMovies } from './store/MoviesSlice'
 import { Box } from '@mui/material'
 import { TransitionsModal } from './components/Modal/Modal'
+import { initialMovieSelector, isMovieAddedSelector } from './store/selectors'
 
 function App() {
-  const movie = useSelector((state: RootState) => state.movieSlice.initialMovie)
-  const isAdded = useSelector((state: RootState) => state.movieSlice.isMovieAdded)
+  const initialMovie = useSelector(initialMovieSelector)
+  const isAdded = useSelector(isMovieAddedSelector)
 
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
-    dispatch(getMovies(movie))
+    dispatch(getMovies(initialMovie))
   }, [])
 
   const handleModalClose = () => {
@@ -20,12 +21,18 @@ function App() {
   }
 
   return (
-    <Box sx={{
-      width: '100%',
-      height: '100vh',
-      backgroundColor: "#1d2527",
-    }}>
-      <TransitionsModal open={!!isAdded} close={handleModalClose} message={"movie is already added"}/>
+    <Box
+      sx={{
+        width: '100%',
+        height: '100vh',
+        backgroundColor: '#1d2527',
+      }}
+    >
+      <TransitionsModal
+        open={!!isAdded}
+        close={handleModalClose}
+        message={'movie is already added'}
+      />
       <Movies />
     </Box>
   )

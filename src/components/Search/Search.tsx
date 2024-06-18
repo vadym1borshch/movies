@@ -2,10 +2,11 @@ import { ChangeEvent, FC, useCallback, useEffect, useState } from 'react'
 import { Box, TextField } from '@mui/material'
 import _ from 'lodash'
 import { getMovies } from '../../store/MoviesSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../store/store'
 //@ts-ignore
 import moviesIcon from '../../commonFiles/movie-player-play-video-svgrepo-com.svg'
+import { moviesSelector } from '../../store/selectors'
 
 /**
  *
@@ -19,6 +20,8 @@ interface ISearchProps {
 }
 
 export const Search: FC<ISearchProps> = ({ label, icon, title }) => {
+  const movies = useSelector(moviesSelector)
+
   const [query, setQuery] = useState('')
   const dispatch = useDispatch<AppDispatch>()
 
@@ -28,9 +31,11 @@ export const Search: FC<ISearchProps> = ({ label, icon, title }) => {
     setQuery(e.currentTarget.value)
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceAction = useCallback(
     _.debounce((value: string) => {
       dispatch(getMovies(value))
+      setQuery('')
     }, 3000),
     [],
   )
@@ -60,7 +65,9 @@ export const Search: FC<ISearchProps> = ({ label, icon, title }) => {
           onChange={onChangeHandler}
         />
       </Box>
-      <Box className="result_container">result</Box>
+      <Box className="result_container">
+        Found {movies.length} {`${movies.length === 1 ? 'result' : 'results'}`}
+      </Box>
     </Box>
   )
 }

@@ -75,6 +75,17 @@ const movieSlice = createSlice({
     clearIsMovieAddedAction: (state) => {
       state.isMovieAdded = null
     },
+    setRatingWatchedMoviesAction: (
+      state,
+      action: PayloadAction<{ id: string; rating: number }>,
+    ) => {
+      state.watchedMovies = state.watchedMovies.map((movie) => {
+        if (movie.imdbID === action.payload.id) {
+          return { ...movie, personalRating: action.payload.rating }
+        }
+        return movie
+      })
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -92,7 +103,10 @@ const movieSlice = createSlice({
   },
 })
 
-export const { addWatchedMovieAction, clearIsMovieAddedAction } =
-  movieSlice.actions
+export const {
+  addWatchedMovieAction,
+  setRatingWatchedMoviesAction,
+  clearIsMovieAddedAction,
+} = movieSlice.actions
 
 export default movieSlice.reducer
