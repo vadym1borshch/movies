@@ -12,11 +12,12 @@ export type WatchedMovieType = {
   Poster: string
   Title: string
   Plot: string
-  Year: string
+  Released: string
   Genre: string
   Actors: string
   Type: string
   imdbID: string
+  Writer: string
   Runtime: number
   imdbRating: number
   personalRating: number
@@ -49,7 +50,8 @@ type MovieInfoTypeAPI = {
   Runtime: string
   Title: string
   Type: string
-  Year: string
+  Released: string
+  Writer: string
   imdbID: string
   imdbRating: string
 }
@@ -73,6 +75,7 @@ export const getMoviesInfo = createAsyncThunk<
   const url = `https://www.omdbapi.com/?apikey=${KEY}&i=${id}`
 
   const res = await axios.get(url)
+  console.log(res.data)
   return res.data
 })
 
@@ -137,9 +140,10 @@ const movieSlice = createSlice({
                 personalRating: 0,
                 Plot: action.payload.Plot,
                 Type: action.payload.Type,
-                Year: action.payload.Year,
+                Released: action.payload.Released,
                 Actors: action.payload.Actors,
                 Genre: action.payload.Genre,
+                Writer: action.payload.Writer,
               },
             ]
           }
@@ -152,9 +156,7 @@ const movieSlice = createSlice({
   },
 })
 
-export const {
-  setRatingWatchedMoviesAction,
-  clearIsMovieAddedAction,
-} = movieSlice.actions
+export const { setRatingWatchedMoviesAction, clearIsMovieAddedAction } =
+  movieSlice.actions
 
 export default movieSlice.reducer

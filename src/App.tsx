@@ -31,8 +31,10 @@ function App() {
       <TransitionsModal
         open={!!isAdded}
         close={handleModalClose}
-        message={'movie is already added'}
-      />
+        buttonChildren="Ok"
+      >
+        movie is already added
+      </TransitionsModal>
       <Movies />
     </Box>
   )

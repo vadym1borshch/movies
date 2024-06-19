@@ -124,6 +124,7 @@ export const infoContainer: SxProps<Theme> = {
         gap: 1,
         justifyContent: '',
         borderBottom: "2px solid white",
+        cursor: 'pointer',
         '& .movie-image_container': {
           '& img': {
             width: '100px',
@@ -165,3 +166,5 @@ export const infoContainer: SxProps<Theme> = {
     },
   },
 }
+
+

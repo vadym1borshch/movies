@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { Box } from '@mui/material'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../../store/store'
 import StarRateIcon from '@mui/icons-material/StarRate'
 import TimelapseIcon from '@mui/icons-material/Timelapse'
 import StarsIcon from '@mui/icons-material/Stars'

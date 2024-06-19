@@ -5,9 +5,10 @@ import Modal from '@mui/material/Modal'
 import Fade from '@mui/material/Fade'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
+import { SxProps, Theme } from '@mui/material'
 
-const style = {
+const style: SxProps<Theme> = {
   position: 'absolute' as 'absolute',
   top: '50%',
   left: '50%',
@@ -22,16 +23,24 @@ const style = {
   flexDirection: 'column',
   textAlign: 'center',
   color: 'red',
-  textTransform: 'uppercase'
+  textTransform: 'uppercase',
 }
 
 interface IModalProps {
   open: boolean
   close: () => void
-  message: string
+  children: ReactNode
+  sx?: SxProps<Theme>
+  buttonChildren: ReactNode
 }
 
-export const TransitionsModal: FC<IModalProps> = ({ open, close, message }) => {
+export const TransitionsModal: FC<IModalProps> = ({
+  open,
+  buttonChildren,
+  sx,
+  close,
+  children,
+}) => {
   return (
     <div>
       <Modal
@@ -45,11 +54,11 @@ export const TransitionsModal: FC<IModalProps> = ({ open, close, message }) => {
         }}
       >
         <Fade in={open}>
-          <Box sx={style}>
+          <Box sx={{ ...style, ...sx }}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              {message}
+              {children}
             </Typography>
-            <Button onClick={close}>close</Button>
+            <Button onClick={close}>{buttonChildren}</Button>
           </Box>
         </Fade>
       </Modal>

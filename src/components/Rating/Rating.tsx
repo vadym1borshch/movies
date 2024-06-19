@@ -11,15 +11,16 @@ interface IRatingProps {
   numOfRatingsPoint?: number
   pointColor?: string
   pointSize?: number
-  onRatingStatus?: (value: number) => void
-  callback?: (value: number) => void
+  setRatingCallback?: (value: number) => void
+  initialRating?: number
 }
 
 const Rating: FC<IRatingProps> = ({
   numOfRatingsPoint = 10,
   pointColor = 'red',
   pointSize = 20,
-  callback,
+  setRatingCallback,
+  initialRating = 0
 }) => {
   const ratingPoints = generateListFromNumber(numOfRatingsPoint)
   const [checked, setChecked] = useState<number>(0)
@@ -33,7 +34,7 @@ const Rating: FC<IRatingProps> = ({
 
   const handleChecked = (value: number) => {
     setChecked(value)
-    callback && callback(value)
+    setRatingCallback && setRatingCallback(value)
   }
 
   return (
@@ -61,7 +62,7 @@ const Rating: FC<IRatingProps> = ({
           </Icon>
         )
       })}
-      <span style={{ color: pointColor }}>: {hover || checked || ''}</span>
+      <span style={{ color: pointColor }}>: {hover || checked}</span>
     </>
   )
 }
