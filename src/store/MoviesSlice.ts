@@ -11,9 +11,14 @@ export type MovieType = {
 export type WatchedMovieType = {
   Poster: string
   Title: string
+  Plot: string
+  Year: string
+  Genre: string
+  Actors: string
+  Type: string
   imdbID: string
-  duration: number
-  overallRating: number
+  Runtime: number
+  imdbRating: number
   personalRating: number
 }
 
@@ -36,6 +41,19 @@ const initialState: StateType = {
 }
 const KEY = 'af71ac68'
 
+type MovieInfoTypeAPI = {
+  Actors: string
+  Genre: string
+  Plot: string
+  Poster: string
+  Runtime: string
+  Title: string
+  Type: string
+  Year: string
+  imdbID: string
+  imdbRating: string
+}
+
 export const getMovies = createAsyncThunk<
   MovieType[], // Тип даних, який повертає сервер
   string, // Тип аргументу для thunk (у цьому випадку - відсутній)
@@ -47,31 +65,21 @@ export const getMovies = createAsyncThunk<
   return res.data.Search
 })
 
+export const getMoviesInfo = createAsyncThunk<
+  MovieInfoTypeAPI,
+  string,
+  { rejectValue: string }
+>('movies/getMoviesInfo', async (id) => {
+  const url = `https://www.omdbapi.com/?apikey=${KEY}&i=${id}`
+
+  const res = await axios.get(url)
+  return res.data
+})
+
 const movieSlice = createSlice({
   name: 'movies',
   initialState,
   reducers: {
-    addWatchedMovieAction: (state, action: PayloadAction<MovieType>) => {
-      const hasMovie = state.watchedMovies.find(
-        (movie) => movie.imdbID === action.payload.imdbID,
-      )
-      if (hasMovie) {
-        state.isMovieAdded = action.payload.imdbID
-      }
-      if (!hasMovie) {
-        state.watchedMovies = [
-          ...state.watchedMovies,
-          {
-            Poster: action.payload.Poster,
-            imdbID: action.payload.imdbID,
-            Title: action.payload.Title,
-            duration: Math.floor(Math.random() * 81) + 120,
-            overallRating: Math.floor(Math.random() * 9),
-            personalRating: 0,
-          },
-        ]
-      }
-    },
     clearIsMovieAddedAction: (state) => {
       state.isMovieAdded = null
     },
@@ -100,11 +108,51 @@ const movieSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message
       })
+      .addCase(getMoviesInfo.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(
+        getMoviesInfo.fulfilled,
+        (state, action: PayloadAction<MovieInfoTypeAPI>) => {
+          state.status = 'succeeded'
+          const hasMovie = state.watchedMovies.find(
+            (movie) => movie.imdbID === action.payload.imdbID,
+          )
+          if (hasMovie) {
+            state.isMovieAdded = action.payload.imdbID
+          }
+          if (!hasMovie) {
+            state.watchedMovies = [
+              ...state.watchedMovies,
+              {
+                Poster: action.payload.Poster,
+                imdbID: action.payload.imdbID,
+                Title: action.payload.Title,
+                Runtime:
+                  action.payload.Runtime !== 'N/A'
+                    ? // @ts-ignore
+                      parseInt(action.payload.Runtime.match(/\d+/)[0], 10)
+                    : 0,
+                imdbRating: +action.payload.imdbRating,
+                personalRating: 0,
+                Plot: action.payload.Plot,
+                Type: action.payload.Type,
+                Year: action.payload.Year,
+                Actors: action.payload.Actors,
+                Genre: action.payload.Genre,
+              },
+            ]
+          }
+        },
+      )
+      .addCase(getMoviesInfo.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
   },
 })
 
 export const {
-  addWatchedMovieAction,
   setRatingWatchedMoviesAction,
   clearIsMovieAddedAction,
 } = movieSlice.actions

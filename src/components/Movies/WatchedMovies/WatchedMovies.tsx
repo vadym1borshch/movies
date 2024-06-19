@@ -48,7 +48,7 @@ export const WatchedMovie: FC<IWatchedMoviesProps> = ({ isClose, movie }) => {
           </Box>
           <Box className="movie-data_container">
             <span>
-              {movie.overallRating}
+              {movie.imdbRating}
               <StarRateIcon />
             </span>
             <span aria-describedby={id} onClick={handleClick}>
@@ -56,7 +56,7 @@ export const WatchedMovie: FC<IWatchedMoviesProps> = ({ isClose, movie }) => {
               <StarsIcon />
             </span>
             <span>
-              {movie.duration}
+              {movie.Runtime}
               <TimelapseIcon />
             </span>
           </Box>

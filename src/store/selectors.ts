@@ -20,9 +20,9 @@ export const overallMovieValuesSelector = createSelector(
     const totalCount = movies.length
     const totalValues = movies.reduce((acc, movie) => {
       return {
-        totalOverallRating: acc.totalOverallRating + movie.overallRating,
+        totalOverallRating: acc.totalOverallRating + movie.imdbRating,
         totalPersonalRating: acc.totalPersonalRating + movie.personalRating,
-        totalDuration: acc.totalDuration + movie.duration,
+        totalDuration: acc.totalDuration + movie.Runtime,
       }
     }, initialValues)
 
