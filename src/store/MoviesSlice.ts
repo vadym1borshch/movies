@@ -8,7 +8,7 @@ export type MovieType = {
   Year: string
   imdbID: string
 }
-export type WatchedMovieType = {
+export type selectedMovieType = {
   Poster: string
   Title: string
   Plot: string
@@ -25,7 +25,8 @@ export type WatchedMovieType = {
 
 type StateType = {
   movies: MovieType[]
-  watchedMovies: WatchedMovieType[]
+  selectedMovie: selectedMovieType | null
+  addedMovieToWatch: selectedMovieType[]
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: null | string | undefined
   initialMovie: string
@@ -34,7 +35,8 @@ type StateType = {
 
 const initialState: StateType = {
   movies: [],
-  watchedMovies: [],
+  selectedMovie: null,
+  addedMovieToWatch: [],
   status: 'idle',
   error: null,
   initialMovie: 'interstellar',
@@ -57,9 +59,9 @@ type MovieInfoTypeAPI = {
 }
 
 export const getMovies = createAsyncThunk<
-  MovieType[], // Тип даних, який повертає сервер
-  string, // Тип аргументу для thunk (у цьому випадку - відсутній)
-  { rejectValue: string } // Опціональні параметри та обробка помилок
+  MovieType[], // Data type returns from API
+  string, // Type of arg for thunk
+  { rejectValue: string } // Optional params
 >('movies/getMovies', async (query) => {
   const url = `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
 
@@ -75,7 +77,6 @@ export const getMoviesInfo = createAsyncThunk<
   const url = `https://www.omdbapi.com/?apikey=${KEY}&i=${id}`
 
   const res = await axios.get(url)
-  console.log(res.data)
   return res.data
 })
 
@@ -86,16 +87,36 @@ const movieSlice = createSlice({
     clearIsMovieAddedAction: (state) => {
       state.isMovieAdded = null
     },
+    deleteSelectedMovieAction: (state) => {
+      state.selectedMovie = null
+    },
+    setSelectedMovieAction: (state,action:PayloadAction<selectedMovieType>) => {
+      state.selectedMovie = action.payload
+    },
+    deleteWatchedMovieAction: (state,action:PayloadAction<string>) => {
+      state.addedMovieToWatch = state.addedMovieToWatch.filter((movie) => movie.imdbID !== action.payload)
+    },
     setRatingWatchedMoviesAction: (
       state,
-      action: PayloadAction<{ id: string; rating: number }>,
+      action: PayloadAction<{ movie: selectedMovieType; rating: number }>,
     ) => {
-      state.watchedMovies = state.watchedMovies.map((movie) => {
-        if (movie.imdbID === action.payload.id) {
-          return { ...movie, personalRating: action.payload.rating }
-        }
-        return movie
-      })
+      state.selectedMovie = {
+        ...action.payload.movie,
+        personalRating: action.payload.rating,
+      }
+    },
+    addMovieToWatchAction: (
+      state,
+      action: PayloadAction<selectedMovieType>,
+    ) => {
+      const hasMovie = state.addedMovieToWatch.find(
+        (movie) => movie.imdbID === action.payload.imdbID,
+      )
+      if (hasMovie) {
+        state.isMovieAdded = action.payload.imdbID
+        return
+      }
+      state.addedMovieToWatch = [...state.addedMovieToWatch, action.payload]
     },
   },
   extraReducers: (builder) => {
@@ -118,34 +139,24 @@ const movieSlice = createSlice({
         getMoviesInfo.fulfilled,
         (state, action: PayloadAction<MovieInfoTypeAPI>) => {
           state.status = 'succeeded'
-          const hasMovie = state.watchedMovies.find(
-            (movie) => movie.imdbID === action.payload.imdbID,
-          )
-          if (hasMovie) {
-            state.isMovieAdded = action.payload.imdbID
-          }
-          if (!hasMovie) {
-            state.watchedMovies = [
-              ...state.watchedMovies,
-              {
-                Poster: action.payload.Poster,
-                imdbID: action.payload.imdbID,
-                Title: action.payload.Title,
-                Runtime:
-                  action.payload.Runtime !== 'N/A'
-                    ? // @ts-ignore
-                      parseInt(action.payload.Runtime.match(/\d+/)[0], 10)
-                    : 0,
-                imdbRating: +action.payload.imdbRating,
-                personalRating: 0,
-                Plot: action.payload.Plot,
-                Type: action.payload.Type,
-                Released: action.payload.Released,
-                Actors: action.payload.Actors,
-                Genre: action.payload.Genre,
-                Writer: action.payload.Writer,
-              },
-            ]
+
+          state.selectedMovie = {
+            Poster: action.payload.Poster,
+            imdbID: action.payload.imdbID,
+            Title: action.payload.Title,
+            Runtime:
+              action.payload.Runtime !== 'N/A'
+                ? // @ts-ignore
+                  parseInt(action.payload.Runtime.match(/\d+/)[0], 10)
+                : 0,
+            imdbRating: +action.payload.imdbRating,
+            personalRating: 0,
+            Plot: action.payload.Plot,
+            Type: action.payload.Type,
+            Released: action.payload.Released,
+            Actors: action.payload.Actors,
+            Genre: action.payload.Genre,
+            Writer: action.payload.Writer,
           }
         },
       )
@@ -156,7 +167,13 @@ const movieSlice = createSlice({
   },
 })
 
-export const { setRatingWatchedMoviesAction, clearIsMovieAddedAction } =
-  movieSlice.actions
+export const {
+  setRatingWatchedMoviesAction,
+  addMovieToWatchAction,
+  deleteSelectedMovieAction,
+  clearIsMovieAddedAction,
+  setSelectedMovieAction,
+  deleteWatchedMovieAction
+} = movieSlice.actions
 
 export default movieSlice.reducer

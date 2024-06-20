@@ -90,33 +90,31 @@ export const MoviesStyles: SxProps<Theme> = {
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '10px',
-    '& .movies': {
+    position: 'relative',
+    '& .container': {
+      position: 'absolute',
       display: 'flex',
-      width: '50%',
+      width: '49.5%',
       backgroundColor: '#4d585e',
       borderRadius: '10px',
       minHeight: '100%',
       flexDirection: 'column',
-      ...iconStyles,
-    },
-    '& .left_container': {
       '& .icon_container': {
         margin: '5px',
+        ...iconStyles,
       },
     },
-    '& .right_container': {},
+
   },
 }
 
 export const infoContainer: SxProps<Theme> = {
   '& .watched-movies-summary_info': {
     borderRadius: '10px',
-    margin: '0 0 10px 0',
     ...iconStyles,
     '& .watched-movies_container': {
       overflow: 'auto',
-      marginTop: '10px',
-      padding: '0 5px',
+      padding: '10px 5px 0 5px',
       ...scrollStyle,
       '& .movie_container': {
         display: 'flex',
@@ -124,7 +122,6 @@ export const infoContainer: SxProps<Theme> = {
         gap: 1,
         justifyContent: '',
         borderBottom: "2px solid white",
-        cursor: 'pointer',
         '& .movie-image_container': {
           '& img': {
             width: '100px',
@@ -132,15 +129,34 @@ export const infoContainer: SxProps<Theme> = {
           },
         },
         '& .movie-descriptions_container': {
+          width: '100%',
           '& .movie-data_container': {
             display: 'flex',
             flexDirection: 'row',
+            alignItems: 'center',
             gap: 3,
+            width: '100%',
+            position: 'relative',
             '& span': {
               display: 'flex',
               alignItems: 'center',
               gap: 1,
             },
+            "& button": {
+              position: 'absolute',
+              backgroundColor: 'red',
+              color: "white",
+              width: '20px',
+              height: "20px",
+              borderRadius: "50%",
+              minWidth: 0,
+              right: 0,
+              "&:hover": {
+                backgroundColor: 'lightgray',
+                color: 'red',
+
+              }
+            }
           },
         },
       },

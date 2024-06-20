@@ -23,7 +23,7 @@ const Rating: FC<IRatingProps> = ({
   initialRating = 0
 }) => {
   const ratingPoints = generateListFromNumber(numOfRatingsPoint)
-  const [checked, setChecked] = useState<number>(0)
+  const [checked, setChecked] = useState<number>(initialRating)
   const [hover, setHover] = useState<number>(0)
 
   const isFilled = (point: number): string => {

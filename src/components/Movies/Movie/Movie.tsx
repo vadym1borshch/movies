@@ -1,9 +1,10 @@
 import { FC } from 'react'
 import { Box } from '@mui/material'
-import { MovieType, getMoviesInfo } from '../../../store/MoviesSlice'
+import { MovieType, getMoviesInfo, setSelectedMovieAction } from '../../../store/MoviesSlice'
 import { MovieStyles } from './style'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../../store/store'
+import { addedToWatchMoviesSelector } from '../../../store/selectors'
 
 interface IMovieProps {
   movies: MovieType[]
@@ -12,8 +13,18 @@ interface IMovieProps {
 }
 
 export const Movie: FC<IMovieProps> = ({ movies, isClose, height }) => {
-
+  const selectedMovie = useSelector(addedToWatchMoviesSelector)
   const dispatch = useDispatch<AppDispatch>()
+
+  const showMoviesInfo = (id: string) => {
+    const existingMovie = selectedMovie.find((movie)=> movie.imdbID === id)
+    if (existingMovie) {
+      dispatch(setSelectedMovieAction(existingMovie))
+      return
+    }
+    dispatch(getMoviesInfo(id))
+  }
+
   return (
     <Box
       sx={{
@@ -27,9 +38,7 @@ export const Movie: FC<IMovieProps> = ({ movies, isClose, height }) => {
           <Box
             key={movie.imdbID}
             className="movie_container"
-            onClick={() => {
-              dispatch(getMoviesInfo(movie.imdbID))
-            }}
+            onClick={() => showMoviesInfo(movie.imdbID)}
           >
             <Box>
               <img src={movie.Poster} alt={movie.Title} />

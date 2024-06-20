@@ -1,25 +1,38 @@
 import React, { useEffect } from 'react'
 import { Movies } from './components/Movies/Movies'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from './store/store'
-import { clearIsMovieAddedAction, getMovies } from './store/MoviesSlice'
+import { AppDispatch } from './store/store'
+import {
+  deleteSelectedMovieAction,
+  getMovies,
+  setRatingWatchedMoviesAction,
+} from './store/MoviesSlice'
 import { Box } from '@mui/material'
 import { TransitionsModal } from './components/Modal/Modal'
-import { initialMovieSelector, isMovieAddedSelector } from './store/selectors'
+import {
+  initialMovieSelector,
+  selectedMovieSelector,
+} from './store/selectors'
+import { watchedMovieModalStyle } from './components/Movies/MovieDetails/MovieDetailsStyle'
+import { MovieDetails } from './components/Movies/MovieDetails/MovieDetails'
 
 function App() {
   const initialMovie = useSelector(initialMovieSelector)
-  const isAdded = useSelector(isMovieAddedSelector)
-
+  const movie = useSelector(selectedMovieSelector)
   const dispatch = useDispatch<AppDispatch>()
+
+  const handleSetRating = (value: number) => {
+    dispatch(setRatingWatchedMoviesAction({ movie: movie!, rating: value }))
+  }
+
+  const handleCloseDetails = () => {
+    if (!movie) return
+    dispatch(deleteSelectedMovieAction())
+  }
+
   useEffect(() => {
     dispatch(getMovies(initialMovie))
   }, [])
-
-  const handleModalClose = () => {
-    dispatch(clearIsMovieAddedAction())
-  }
-
   return (
     <Box
       sx={{
@@ -29,11 +42,12 @@ function App() {
       }}
     >
       <TransitionsModal
-        open={!!isAdded}
-        close={handleModalClose}
-        buttonChildren="Ok"
+        open={!!movie}
+        close={handleCloseDetails}
+        sx={watchedMovieModalStyle}
+        buttonChildren="back"
       >
-        movie is already added
+        {movie && <MovieDetails movie={movie} callback={handleSetRating} />}
       </TransitionsModal>
       <Movies />
     </Box>

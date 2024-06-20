@@ -1,11 +1,14 @@
 import { RootState } from './store'
 import { createSelector } from 'reselect'
 
-export const watchedMoviesSelector = (state: RootState) =>
-  state.movieSlice.watchedMovies
+export const selectedMovieSelector = (state: RootState) =>
+  state.movieSlice.selectedMovie
 export const moviesSelector = (state: RootState) => state.movieSlice.movies
 export const isMovieAddedSelector = (state: RootState) => state.movieSlice.isMovieAdded
+export const statusSelector = (state: RootState) => state.movieSlice.status
+export const errorSelector = (state: RootState) => state.movieSlice.error
 export const initialMovieSelector = (state: RootState) => state.movieSlice.initialMovie
+export const addedToWatchMoviesSelector = (state: RootState) => state.movieSlice.addedMovieToWatch
 
 const initialValues = {
   totalOverallRating: 0,
@@ -15,7 +18,7 @@ const initialValues = {
 
 // Мемоізований селектор
 export const overallMovieValuesSelector = createSelector(
-  [watchedMoviesSelector],
+  [addedToWatchMoviesSelector],
   (movies) => {
     const totalCount = movies.length
     const totalValues = movies.reduce((acc, movie) => {

@@ -6,16 +6,15 @@ import TimelapseIcon from '@mui/icons-material/Timelapse'
 import StarsIcon from '@mui/icons-material/Stars'
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies'
 import {
-  overallMovieValuesSelector,
-  watchedMoviesSelector,
+  addedToWatchMoviesSelector, overallMovieValuesSelector,
 } from '../../../store/selectors'
 
 interface iWatchedMoviesSummaryProps {}
 
 export const WatchedMoviesSummary: FC<iWatchedMoviesSummaryProps> = ({}) => {
-  const watchedMovies = useSelector(watchedMoviesSelector)
+  const movie = useSelector(addedToWatchMoviesSelector)
   const overallValues = useSelector(overallMovieValuesSelector)
-  const totalCount = watchedMovies.length
+  const totalCount = movie.length
 
 
   return (
